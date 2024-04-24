@@ -15,7 +15,6 @@ struct playerControl: View {
     @Binding var historyList: [String]
     @Binding var gameStarted: Bool
 
-    
     var body: some View {
         VStack{
             Text("Player \(playerNum)")
@@ -68,32 +67,37 @@ struct ContentView: View {
     @State var gameStarted = false
     
     var body: some View {
-        Text("Modify Health Gain or Loss").multilineTextAlignment(.center)
-        TextField("health input", text: $healthNum, prompt: Text("health")).multilineTextAlignment(.center).textFieldStyle(RoundedBorderTextFieldStyle())
-        VStack {
-            ForEach(0 ..< playerNum, id: \.self) { index in
-                playerControl(playerNum: index+1, healthNum: Int(self.healthNum) ?? 5, historyList: $historyList, gameStarted: $gameStarted)
-            }
-        }
-        Button(action: {
-            self.playerNum += 1
-        }) {
-            Text("add player")
-        }.disabled(gameStarted)
-        Button(action: {
-            self.playerNum -= 1
-        }) {
-            Text("remove player")
-        }.disabled(gameStarted)
         NavigationView {
-            NavigationLink("History", destination: ScrollView{
-                VStack(alignment: .leading) {
-                    ForEach(historyList, id: \.self) {HistoryString in
-                        Text(HistoryString)
+            VStack {
+                Text("Modify Health Gain or Loss").multilineTextAlignment(.center)
+                TextField("health input", text: $healthNum, prompt: Text("health")).multilineTextAlignment(.center).textFieldStyle(RoundedBorderTextFieldStyle())
+                
+                ForEach(0 ..< playerNum, id: \.self) { index in
+                    playerControl(playerNum: index+1, healthNum: Int(self.healthNum) ?? 5, historyList: $historyList, gameStarted: $gameStarted)
+                }
+                
+                Button(action: {
+                    self.playerNum += 1
+                }) {
+                    Text("add player")
+                }.disabled(gameStarted)
+                Button(action: {
+                    self.playerNum -= 1
+                }) {
+                    Text("remove player")
+                }.disabled(gameStarted)
+                
+                NavigationLink(destination: ScrollView{
+                    VStack(alignment: .leading) {
+                        ForEach(historyList, id: \.self) {HistoryString in
+                            Text(HistoryString)
+                        }
                     }
+                }){
+                    Text("History")
                 }
             }
-        )}
+        }
     }
 }
 
